@@ -64,7 +64,7 @@ func (lp *ConnectionListPaginator) NextPage() ([]Connection, error) {
 	}
 
 	var r = &ConnectionListResponse{}
-	var err = lp.client.Get(lp.config, r)
+	var _, err = lp.client.Get(lp.config, r)
 	if err != nil {
 		return nil, lp.client.handleKnownErrors(err, "connections:read")
 	}
@@ -83,7 +83,7 @@ func (lp *ConnectionListPaginator) NextPage() ([]Connection, error) {
 
 func (at *Client) NewConnectionListPaginator(maxItems int, teamId int) *ConnectionListPaginator {
 	var config = NewRequestConfig("connections")
-	ColumnsToParams(&config.Params, []string{"id", "name", "accountName", "accountLabel", "packageName", "expire", "metadata", "teamId", "upgradeable", "scoped", "accountType", "editable", "uid"})
+	ColumnsToParams(config.Params, []string{"id", "name", "accountName", "accountLabel", "packageName", "expire", "metadata", "teamId", "upgradeable", "scoped", "accountType", "editable", "uid"})
 	config.Params.Set("teamId", strconv.Itoa(teamId))
 
 	maxItems, limit := GetMaxAndLimit(maxItems)
@@ -105,7 +105,7 @@ func (at *Client) GetConnection(connectionId int) (*Connection, error) {
 	var config = NewRequestConfig(fmt.Sprintf(`connections/%d`, connectionId))
 
 	var result = &ConnectionResponse{}
-	var err = at.Get(config, &result)
+	var _, err = at.Get(config, &result)
 	if err != nil {
 		return nil, at.handleKnownErrors(err, "connections:read")
 	}

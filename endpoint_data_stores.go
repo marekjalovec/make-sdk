@@ -46,7 +46,7 @@ func (lp *DataStoreListPaginator) NextPage() ([]DataStore, error) {
 	}
 
 	var r = &DataStoreListResponse{}
-	var err = lp.client.Get(lp.config, r)
+	var _, err = lp.client.Get(lp.config, r)
 	if err != nil {
 		return nil, lp.client.handleKnownErrors(err, "datastores:read")
 	}
@@ -84,10 +84,10 @@ func (at *Client) NewDataStoreListPaginator(maxItems int, teamId int) *DataStore
 
 func (at *Client) GetDataStore(dataStoreId int) (*DataStore, error) {
 	var config = NewRequestConfig(fmt.Sprintf(`data-stores/%d`, dataStoreId))
-	ColumnsToParams(&config.Params, []string{"id", "name", "teamId", "records", "size", "maxSize", "datastructureId"})
+	ColumnsToParams(config.Params, []string{"id", "name", "teamId", "records", "size", "maxSize", "datastructureId"})
 
 	var result = &DataStoreResponse{}
-	var err = at.Get(config, &result)
+	var _, err = at.Get(config, &result)
 	if err != nil {
 		return nil, at.handleKnownErrors(err, "datastores:read")
 	}

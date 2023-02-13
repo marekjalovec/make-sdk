@@ -5,12 +5,19 @@ import (
 )
 
 type UserRole struct {
-	Id          int      `json:"id"`
-	Name        string   `json:"name"`
-	Subsidiary  bool     `json:"subsidiary"`
-	Category    string   `json:"category"`
-	Permissions []string `json:"permissions"`
+	Id          int              `json:"id"`
+	Name        string           `json:"name"`
+	Subsidiary  bool             `json:"subsidiary"`
+	Category    UserRoleCategory `json:"category"`
+	Permissions []string         `json:"permissions"`
 }
+
+type UserRoleCategory string
+
+const (
+	UserRoleCategoryTeam         UserRoleCategory = "team"
+	UserRoleCategoryOrganization UserRoleCategory = "organization"
+)
 
 type UserRoleListResponse struct {
 	UserRoles  []UserRole `json:"usersRoles"`
@@ -39,7 +46,7 @@ func (lp *UserRoleListPaginator) NextPage() ([]UserRole, error) {
 	}
 
 	var r = &UserRoleListResponse{}
-	var err = lp.client.Get(lp.config, r)
+	var _, err = lp.client.Get(lp.config, r)
 	if err != nil {
 		return nil, lp.client.handleKnownErrors(err, "user:read")
 	}
@@ -58,7 +65,7 @@ func (lp *UserRoleListPaginator) NextPage() ([]UserRole, error) {
 
 func (at *Client) NewUserRoleListPaginator(maxItems int) *UserRoleListPaginator {
 	var config = NewRequestConfig("users/roles")
-	ColumnsToParams(&config.Params, []string{"id", "name", "subsidiary", "category", "permissions"})
+	ColumnsToParams(config.Params, []string{"id", "name", "subsidiary", "category", "permissions"})
 
 	maxItems, limit := GetMaxAndLimit(maxItems)
 	config.Pagination = NewRequestPagination(limit)

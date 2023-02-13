@@ -64,7 +64,7 @@ func (lp *OrganizationListPaginator) NextPage() ([]Organization, error) {
 	}
 
 	var r = &OrganizationListResponse{}
-	var err = lp.client.Get(lp.config, r)
+	var _, err = lp.client.Get(lp.config, r)
 	if err != nil {
 		return nil, lp.client.handleKnownErrors(err, "organizations:read")
 	}
@@ -83,7 +83,7 @@ func (lp *OrganizationListPaginator) NextPage() ([]Organization, error) {
 
 func (at *Client) NewOrganizationListPaginator(maxItems int) *OrganizationListPaginator {
 	var config = NewRequestConfig("organizations")
-	ColumnsToParams(&config.Params, []string{"id", "name", "countryId", "timezoneId", "license", "zone", "serviceName", "isPaused", "externalId", "teams"})
+	ColumnsToParams(config.Params, []string{"id", "name", "countryId", "timezoneId", "license", "zone", "serviceName", "isPaused", "externalId", "teams"})
 
 	maxItems, limit := GetMaxAndLimit(maxItems)
 	config.Pagination = NewRequestPagination(limit)
@@ -102,10 +102,10 @@ func (at *Client) NewOrganizationListPaginator(maxItems int) *OrganizationListPa
 
 func (at *Client) GetOrganization(organizationId int) (*Organization, error) {
 	var config = NewRequestConfig(fmt.Sprintf(`organizations/%d`, organizationId))
-	ColumnsToParams(&config.Params, []string{"id", "name", "countryId", "timezoneId", "license", "zone", "serviceName", "isPaused", "externalId", "teams"})
+	ColumnsToParams(config.Params, []string{"id", "name", "countryId", "timezoneId", "license", "zone", "serviceName", "isPaused", "externalId", "teams"})
 
 	var result = &OrganizationResponse{}
-	var err = at.Get(config, &result)
+	var _, err = at.Get(config, &result)
 	if err != nil {
 		return nil, at.handleKnownErrors(err, "organizations:read")
 	}

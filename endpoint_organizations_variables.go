@@ -38,7 +38,7 @@ func (lp *OrganizationVariableListPaginator) NextPage() ([]OrganizationVariable,
 	}
 
 	var r = &OrganizationVariableListResponse{}
-	var err = lp.client.Get(lp.config, r)
+	var _, err = lp.client.Get(lp.config, r)
 	if err != nil {
 		return nil, lp.client.handleKnownErrors(err, "organization-variables:read")
 	}

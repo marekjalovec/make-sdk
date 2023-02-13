@@ -6,14 +6,15 @@ import (
 
 type RequestConfig struct {
 	Endpoint   string
-	Params     url.Values
+	Params     *url.Values
 	Pagination *RequestPagination
+	Body       interface{}
 }
 
 func NewRequestConfig(endpoint string) *RequestConfig {
 	return &RequestConfig{
 		Endpoint: endpoint,
-		Params:   url.Values{},
+		Params:   &url.Values{},
 	}
 }
 

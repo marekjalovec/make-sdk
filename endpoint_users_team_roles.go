@@ -38,7 +38,7 @@ func (lp *UserTeamRoleListPaginator) NextPage() ([]UserTeamRole, error) {
 	}
 
 	var r = &UserTeamRoleListResponse{}
-	var err = lp.client.Get(lp.config, r)
+	var _, err = lp.client.Get(lp.config, r)
 	if err != nil {
 		return nil, lp.client.handleKnownErrors(err, "user:read")
 	}

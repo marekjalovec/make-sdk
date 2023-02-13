@@ -32,7 +32,7 @@ func (op *ApiTokenListPaginator) NextPage() ([]ApiToken, error) {
 	}
 
 	var r = &ApiTokenListResponse{}
-	var err = op.client.Get(op.config, r)
+	var _, err = op.client.Get(op.config, r)
 	if err != nil {
 		return nil, op.client.handleKnownErrors(err, "user:read")
 	}

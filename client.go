@@ -1,6 +1,7 @@
 package makesdk
 
 import (
+	"bytes"
 	"context"
 	"encoding/json"
 	"fmt"
@@ -25,26 +26,20 @@ type Client struct {
 	scopes      *[]string
 }
 
-var clientInstance *Client
-
 func GetClient(config *Config) *Client {
-	if clientInstance != nil {
-		return clientInstance
-	}
-
 	if config.RateLimit == nil {
 		config.RateLimit = &defaultRateLimit
 	}
 
 	// rate limiter with 20% burstable rate
-	var rateLimiter = make(chan time.Time, *config.RateLimit/20)
+	rateLimiter := make(chan time.Time, *config.RateLimit/20)
 	go func() {
 		for t := range time.Tick(time.Minute / time.Duration(*config.RateLimit)) {
 			rateLimiter <- t
 		}
 	}()
 
-	clientInstance = &Client{
+	clientInstance := &Client{
 		client:      http.DefaultClient,
 		rateLimiter: rateLimiter,
 		apiToken:    *config.ApiToken,
@@ -61,30 +56,69 @@ func (at *Client) rateLimit() {
 	<-at.rateLimiter
 }
 
-func (at *Client) Get(config *RequestConfig, target interface{}) error {
+func (at *Client) Get(config *RequestConfig, target interface{}) ([]byte, error) {
 	at.rateLimit()
 
 	// prepare the request URL
-	req, err := at.createAuthorizedRequest(fmt.Sprintf("%s/api/v2/%s", at.baseUrl, config.Endpoint))
+	req, err := at.createAuthorizedRequest(fmt.Sprintf("%s/api/v2/%s", at.baseUrl, config.Endpoint), http.MethodGet)
 	if err != nil {
-		return err
+		return nil, err
 	}
 	at.setQueryParams(req, config)
 
 	// do the call
-	err = at.do(req, target)
+	b, err := at.do(req)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
-	return nil
+	// parse the body
+	if target != nil {
+		err = json.Unmarshal(b, target)
+		if err != nil {
+			return nil, fmt.Errorf("JSON decode failed: %s error: %w", b, err)
+		}
+	}
+
+	return b, nil
 }
 
-func (at *Client) createAuthorizedRequest(apiUrl string) (*http.Request, error) {
-	log.Println(fmt.Sprintf("Resource URL: %s", apiUrl))
+func (at *Client) Post(config *RequestConfig, target interface{}) ([]byte, error) {
+	at.rateLimit()
+
+	// prepare the request URL
+	var body, err = json.Marshal(config.Body)
+	if err != nil {
+		return nil, fmt.Errorf("cannot marshal body: %w", err)
+	}
+	req, err := at.createAuthorizedRequest(fmt.Sprintf("%s/api/v2/%s", at.baseUrl, config.Endpoint), http.MethodPost)
+	if err != nil {
+		return nil, err
+	}
+	req.Body = io.NopCloser(bytes.NewReader(body))
+
+	// do the call
+	b, err := at.do(req)
+	if err != nil {
+		return nil, err
+	}
+
+	// parse the body
+	if target != nil {
+		err = json.Unmarshal(b, target)
+		if err != nil {
+			return nil, fmt.Errorf("JSON decode failed: %s error: %w", b, err)
+		}
+	}
+
+	return b, nil
+}
+
+func (at *Client) createAuthorizedRequest(apiUrl string, method string) (*http.Request, error) {
+	log.Println(fmt.Sprintf("[MAKE]:[%s] -> %s", method, apiUrl))
 
 	// make a new request
-	req, err := http.NewRequestWithContext(context.Background(), "GET", apiUrl, nil)
+	req, err := http.NewRequestWithContext(context.Background(), method, apiUrl, nil)
 	if err != nil {
 		return nil, fmt.Errorf("cannot create request: %w", err)
 	}
@@ -105,44 +139,37 @@ func (at *Client) setQueryParams(req *http.Request, config *RequestConfig) {
 
 	// encode params
 	req.URL.RawQuery = config.Params.Encode()
-
-	log.Println(fmt.Sprintf("Query Params: %s", req.URL.RawQuery))
+	log.Println(fmt.Sprintf("[MAKE]:[PARAMS] %s", req.URL.RawQuery))
 }
 
-func (at *Client) do(req *http.Request, response interface{}) error {
+func (at *Client) do(req *http.Request) ([]byte, error) {
 	var reqUrl = req.URL.RequestURI()
 
 	// do the call
-	resp, err := at.client.Do(req)
+	var resp, err = at.client.Do(req)
 	if err != nil {
-		return fmt.Errorf("HTTP request failure on %s: %w", reqUrl, err)
+		return nil, fmt.Errorf("HTTP request failure on %s: %w", reqUrl, err)
 	}
 	defer resp.Body.Close()
 
 	// handle HTTP errors
 	if resp.StatusCode < 200 || resp.StatusCode > 299 {
-		return NewHttpError(reqUrl, resp)
+		return nil, NewHttpError(reqUrl, resp)
 	}
 
 	// read response body
 	b, err := io.ReadAll(resp.Body)
 	if err != nil {
-		return fmt.Errorf("HTTP Read error on response for %s: %w", reqUrl, err)
+		return nil, fmt.Errorf("HTTP Read error on response for %s: %w", reqUrl, err)
 	}
 
-	// parse the body
-	err = json.Unmarshal(b, response)
-	if err != nil {
-		return fmt.Errorf("JSON decode failed on %s: %s error: %w", reqUrl, b, err)
-	}
-
-	return nil
+	return b, nil
 }
 
 func (at *Client) loadScopes() {
 	var config = NewRequestConfig("users/me/api-tokens")
 	var result = &ApiTokenListResponse{}
-	err := at.Get(config, result)
+	var _, err = at.Get(config, result)
 	if err == nil {
 		for _, token := range result.ApiTokens {
 			if at.IsTokenActive(token.Token) {

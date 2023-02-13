@@ -38,7 +38,7 @@ func (lp *TeamVariableListPaginator) NextPage() ([]TeamVariable, error) {
 	}
 
 	var r = &TeamVariableListResponse{}
-	var err = lp.client.Get(lp.config, r)
+	var _, err = lp.client.Get(lp.config, r)
 	if err != nil {
 		return nil, lp.client.handleKnownErrors(err, "team-variables:read")
 	}

@@ -42,7 +42,7 @@ func (lp *TeamListPaginator) NextPage() ([]Team, error) {
 	}
 
 	var r = &TeamListResponse{}
-	var err = lp.client.Get(lp.config, r)
+	var _, err = lp.client.Get(lp.config, r)
 	if err != nil {
 		return nil, lp.client.handleKnownErrors(err, "teams:read")
 	}
@@ -61,7 +61,7 @@ func (lp *TeamListPaginator) NextPage() ([]Team, error) {
 
 func (at *Client) NewTeamListPaginator(maxItems int, organizationId int) *TeamListPaginator {
 	var config = NewRequestConfig("teams")
-	ColumnsToParams(&config.Params, []string{"id", "name", "organizationId"})
+	ColumnsToParams(config.Params, []string{"id", "name", "organizationId"})
 	config.Params.Set("organizationId", strconv.Itoa(organizationId))
 
 	maxItems, limit := GetMaxAndLimit(maxItems)
@@ -81,10 +81,10 @@ func (at *Client) NewTeamListPaginator(maxItems int, organizationId int) *TeamLi
 
 func (at *Client) GetTeam(teamId int) (*Team, error) {
 	var config = NewRequestConfig(fmt.Sprintf(`teams/%d`, teamId))
-	ColumnsToParams(&config.Params, []string{"id", "name", "organizationId"})
+	ColumnsToParams(config.Params, []string{"id", "name", "organizationId"})
 
 	var result = &TeamResponse{}
-	var err = at.Get(config, &result)
+	var _, err = at.Get(config, &result)
 	if err != nil {
 		return nil, at.handleKnownErrors(err, "teams:read")
 	}
