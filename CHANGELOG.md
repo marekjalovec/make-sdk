@@ -1,3 +1,16 @@
+## v0.2.0 [2023-02-14]
+
+_What's new?_
+
+- Endpoints supported
+
+  - GET: `dlqs/<id>`
+  - GET: `dlqs`
+  - GET: `scenarios/<id>/logs/<log-id>`
+  - GET: `scenarios/<id>/logs`
+  - GET: `scenarios/<id>`
+  - GET: `scenarios`
+
 ## v0.1.0 [2023-01-24]
 
 _What's new?_
