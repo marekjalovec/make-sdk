@@ -3,6 +3,7 @@ package makesdk
 import (
 	"fmt"
 	"strconv"
+	"time"
 )
 
 type Connection struct {
@@ -11,7 +12,7 @@ type Connection struct {
 	AccountName  string             `json:"accountName"`
 	AccountLabel string             `json:"accountLabel"`
 	PackageName  string             `json:"packageName"`
-	Expire       string             `json:"expire"`
+	Expire       time.Time          `json:"expire"`
 	Metadata     ConnectionMetadata `json:"metadata,omitempty"`
 	TeamId       int                `json:"teamId"`
 	Upgradeable  bool               `json:"upgradeable"`

@@ -3,6 +3,7 @@ package makesdk
 import (
 	"fmt"
 	"strconv"
+	"time"
 )
 
 type User struct {
@@ -15,7 +16,7 @@ type User struct {
 	CountryId      int          `json:"countryId"`
 	Features       UserFeatures `json:"features"`
 	Avatar         string       `json:"avatar"`
-	LastLogin      string       `json:"lastLogin"`
+	LastLogin      time.Time    `json:"lastLogin"`
 	OrganizationId int
 	TeamId         int
 }
