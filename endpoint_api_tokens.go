@@ -22,22 +22,22 @@ type ApiTokenListPaginator struct {
 	client    *Client
 }
 
-func (op *ApiTokenListPaginator) HasMorePages() bool {
-	return op.firstPage
+func (lp *ApiTokenListPaginator) HasMorePages() bool {
+	return lp.firstPage
 }
 
-func (op *ApiTokenListPaginator) NextPage() ([]ApiToken, error) {
-	if !op.HasMorePages() {
+func (lp *ApiTokenListPaginator) NextPage() ([]ApiToken, error) {
+	if !lp.HasMorePages() {
 		return nil, fmt.Errorf("no more pages available")
 	}
 
 	var r = &ApiTokenListResponse{}
-	var _, err = op.client.Get(op.config, r)
+	var _, err = lp.client.Get(lp.config, r)
 	if err != nil {
-		return nil, op.client.handleKnownErrors(err, "user:read")
+		return nil, lp.client.handleKnownErrors(err, "user:read")
 	}
 
-	op.firstPage = false
+	lp.firstPage = false
 
 	return r.ApiTokens, nil
 }
