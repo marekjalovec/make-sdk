@@ -11,7 +11,7 @@ type DataStore struct {
 	Records         any    `json:"records"`
 	Size            string `json:"size"`
 	MaxSize         string `json:"maxSize"`
-	DatastructureId int    `json:"datastructureId"`
+	DataStructureId int    `json:"datastructureId"`
 	TeamId          int    `json:"teamId"`
 }
 
