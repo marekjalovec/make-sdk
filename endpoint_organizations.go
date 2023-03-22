@@ -21,16 +21,24 @@ type OrganizationTeam struct {
 }
 
 type OrganizationLicence struct {
-	Apps       []string `json:"apps"`
-	Users      int      `json:"users"`
-	Dslimit    int64    `json:"dslimit"`
-	Fslimit    int64    `json:"fslimit"`
-	Iolimit    int64    `json:"iolimit"`
-	Dsslimit   int64    `json:"dsslimit"`
-	Fulltext   bool     `json:"fulltext"`
-	Interval   int      `json:"interval"`
-	Transfer   int64    `json:"transfer"`
-	Operations int64    `json:"operations"`
+	ApiLimit           int64  `json:"apiLimit"`
+	CreatingTemplates  bool   `json:"creatingTemplates"`
+	CustomFunctions    bool   `json:"customFunctions"`
+	CustomVariables    bool   `json:"customVariables"`
+	DsLimit            int64  `json:"dslimit"`
+	DssLimit           int64  `json:"dsslimit"`
+	ExecutionTime      int    `json:"executionTime"`
+	FsLimit            int64  `json:"fslimit"`
+	Fulltext           bool   `json:"fulltext"`
+	GracePeriod        int    `json:"gracePeriod"`
+	InstallPublicApps  bool   `json:"installPublicApps"`
+	Interval           int    `json:"interval"`
+	IoLimit            int64  `json:"iolimit"`
+	OnDemandScheduling bool   `json:"onDemandScheduling"`
+	Operations         int64  `json:"operations"`
+	RestartPeriod      string `json:"restartPeriod"`
+	ScenarioIO         bool   `json:"scenarioIO"`
+	Transfer           int64  `json:"transfer"`
 }
 
 type OrganizationResponse struct {
