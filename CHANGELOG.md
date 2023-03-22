@@ -1,3 +1,17 @@
+## v0.3.0 [2023-03-22]
+
+_What's new?_
+
+- Endpoints supported
+
+  - GET: `functions/<id>`
+  - GET: `functions`
+
+_Breaking changes_
+
+  - `Organization`.`Licence` updated to match current documentation
+  - `DataStore`.`DatastructureId` renamed to `DataStructureId`
+ 
 ## v0.2.0 [2023-02-14]
 
 _What's new?_
