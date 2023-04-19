@@ -16,7 +16,7 @@ type Scenario struct {
 	Description  string    `json:"description"`
 	FolderId     int       `json:"folderId,omitempty"`
 	IsInvalid    bool      `json:"isinvalid"`
-	IsLinked     bool      `json:"islinked"`
+	IsEnabled    bool      `json:"islinked"`
 	IsLocked     bool      `json:"islocked"`
 	IsPaused     bool      `json:"isPaused"`
 	Concept      bool      `json:"concept"`
