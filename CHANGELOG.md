@@ -1,3 +1,15 @@
+## v0.4.0 [2023-04-19]
+
+_What's new?_
+
+- Endpoints supported
+
+  - GET: `hooks/<id>`
+  - GET: `hooks`
+
+_Breaking changes_
+- `Scenario`.`IsLinked` renamed to `IsEnabled`
+
 ## v0.3.0 [2023-03-22]
 
 _What's new?_
