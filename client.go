@@ -6,7 +6,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
-	"log"
+	"math"
 	"net/http"
 	"strconv"
 	"strings"
@@ -16,6 +16,8 @@ import (
 var (
 	defaultPageSize  = 10000
 	defaultRateLimit = 50
+	maxRetries       = 6
+	baseDelay        = 1 * time.Second
 )
 
 type Client struct {
@@ -67,7 +69,7 @@ func (at *Client) Get(config *RequestConfig, target interface{}) ([]byte, error)
 	at.setQueryParams(req, config)
 
 	// do the call
-	b, err := at.do(req)
+	b, err := at.do(req, 0)
 	if err != nil {
 		return nil, err
 	}
@@ -98,7 +100,7 @@ func (at *Client) Post(config *RequestConfig, target interface{}) ([]byte, error
 	req.Body = io.NopCloser(bytes.NewReader(body))
 
 	// do the call
-	b, err := at.do(req)
+	b, err := at.do(req, 0)
 	if err != nil {
 		return nil, err
 	}
@@ -115,7 +117,6 @@ func (at *Client) Post(config *RequestConfig, target interface{}) ([]byte, error
 }
 
 func (at *Client) createAuthorizedRequest(apiUrl string, method string) (*http.Request, error) {
-	log.Println(fmt.Sprintf("[MAKE]:[%s] -> %s", method, apiUrl))
 
 	// make a new request
 	req, err := http.NewRequestWithContext(context.Background(), method, apiUrl, nil)
@@ -139,10 +140,9 @@ func (at *Client) setQueryParams(req *http.Request, config *RequestConfig) {
 
 	// encode params
 	req.URL.RawQuery = config.Params.Encode()
-	log.Println(fmt.Sprintf("[MAKE]:[PARAMS] %s", req.URL.RawQuery))
 }
 
-func (at *Client) do(req *http.Request) ([]byte, error) {
+func (at *Client) do(req *http.Request, retry int) ([]byte, error) {
 	var reqUrl = req.URL.RequestURI()
 
 	// do the call
@@ -151,6 +151,13 @@ func (at *Client) do(req *http.Request) ([]byte, error) {
 		return nil, fmt.Errorf("HTTP request failure on %s: %w", reqUrl, err)
 	}
 	defer resp.Body.Close()
+
+	// retry on rate limit
+	if retry < maxRetries && (resp.StatusCode == http.StatusTooManyRequests || resp.StatusCode == http.StatusTeapot) {
+		multiplier := math.Pow(2, float64(retry))
+		time.Sleep(baseDelay * time.Duration(multiplier))
+		return at.do(req, retry+1)
+	}
 
 	// handle HTTP errors
 	if resp.StatusCode < 200 || resp.StatusCode > 299 {

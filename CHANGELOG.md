@@ -1,3 +1,9 @@
+## v0.5.0 [2023-08-11]
+
+_What's new?_
+
+- Retry mechanism for API calls
+
 ## v0.4.0 [2023-04-19]
 
 _What's new?_
