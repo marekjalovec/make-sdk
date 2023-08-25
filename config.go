@@ -2,8 +2,8 @@ package makesdk
 
 import (
 	"fmt"
-	"github.com/google/uuid"
 	"net/url"
+	"regexp"
 	"strings"
 )
 
@@ -61,8 +61,8 @@ func validateApiToken(apiToken *string) error {
 		return fmt.Errorf("the API Token is not defined; to get a token, visit the API tab in your Profile page in Make")
 	}
 
-	_, err := uuid.Parse(*apiToken)
-	if err != nil {
+	r := regexp.MustCompile("^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$")
+	if !r.MatchString(*apiToken) {
 		return fmt.Errorf("the API Token seems to have a wrong format; to get a token, visit the API tab in your Profile page in Make")
 	}
 
