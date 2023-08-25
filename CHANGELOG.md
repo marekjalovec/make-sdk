@@ -1,3 +1,9 @@
+## v0.5.1 [2023-08-25]
+
+_What's new?_
+
+- github.com/google/uuid dependency removed
+
 ## v0.5.0 [2023-08-11]
 
 _What's new?_
