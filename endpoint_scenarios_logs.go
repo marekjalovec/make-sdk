@@ -19,6 +19,12 @@ type ScenarioLog struct {
 	Timestamp      time.Time         `json:"timestamp"`
 	Status         ScenarioLogStatus `json:"status,omitempty"`
 	ScenarioId     int
+	Detail         struct { // present when type = "modify"
+		Author struct {
+			Name    string `json:"name"`
+			IsStaff bool   `json:"staff"`
+		} `json:"author"`
+	} `json:"detail,omitempty"`
 }
 
 type ScenarioLogType string

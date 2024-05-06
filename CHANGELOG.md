@@ -1,8 +1,10 @@
-## v0.x.x [2024-TBD]
+## v0.5.2 [2024-05-06]
 
 _What's new?_
 
 - Token scope suggestions in case an API call fails moved to constants, and fixed where a wrong scope was suggested.
+- Enums introduced for various cryptic values in the API.
+- Scenario logs now contain author of changes to the scenario.
 
 ## v0.5.1 [2023-08-25]
 
