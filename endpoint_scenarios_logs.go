@@ -6,20 +6,37 @@ import (
 )
 
 type ScenarioLog struct {
-	Id             string    `json:"id"`
-	ImtId          string    `json:"imtId"`
-	Duration       int       `json:"duration"`
-	Operations     int       `json:"operations"`
-	Transfer       int       `json:"transfer"`
-	OrganizationId int       `json:"organizationId"`
-	TeamId         int       `json:"teamId"`
-	Type           string    `json:"type"`
-	AuthorId       int       `json:"authorId"`
-	Instant        bool      `json:"instant"`
-	Timestamp      time.Time `json:"timestamp"`
-	Status         int       `json:"status"`
+	Id             string            `json:"id"`
+	ImtId          string            `json:"imtId"`
+	Duration       int               `json:"duration"`
+	Operations     int               `json:"operations"`
+	Transfer       int               `json:"transfer"`
+	OrganizationId int               `json:"organizationId"`
+	TeamId         int               `json:"teamId"`
+	Type           ScenarioLogType   `json:"type"`
+	AuthorId       int               `json:"authorId"`
+	IsInstant      bool              `json:"instant"`
+	Timestamp      time.Time         `json:"timestamp"`
+	Status         ScenarioLogStatus `json:"status,omitempty"`
 	ScenarioId     int
 }
+
+type ScenarioLogType string
+
+const (
+	ScenarioLogTypeAuto   ScenarioLogType = "auto"
+	ScenarioLogTypeManual ScenarioLogType = "manual"
+	ScenarioLogTypeModify ScenarioLogType = "modify"
+)
+
+type ScenarioLogStatus int
+
+const (
+	ScenarioLogStatusRunning ScenarioLogStatus = 0
+	ScenarioLogStatusSuccess ScenarioLogStatus = 1
+	ScenarioLogStatusWarning ScenarioLogStatus = 2
+	ScenarioLogStatusError   ScenarioLogStatus = 3
+)
 
 type ScenarioLogResponse struct {
 	ScenarioLog ScenarioLog `json:"scenarioLog"`

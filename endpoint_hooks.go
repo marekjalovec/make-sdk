@@ -6,14 +6,14 @@ import (
 )
 
 type Hook struct {
-	Id          int    `json:"id"`
-	Name        string `json:"name"`
-	TeamId      int    `json:"teamId"`
-	Udid        string `json:"udid"`
-	Type        string `json:"type"`
-	TypeName    string `json:"typeName"`
-	PackageName string `json:"packageName"`
-	Theme       string `json:"theme"`
+	Id          int      `json:"id"`
+	Name        string   `json:"name"`
+	TeamId      int      `json:"teamId"`
+	Udid        string   `json:"udid"`
+	Type        HookType `json:"type"`
+	TypeName    string   `json:"typeName"`
+	PackageName string   `json:"packageName"`
+	Theme       string   `json:"theme"`
 	Flags       struct {
 		Form bool `json:"form"`
 	} `json:"flags"`
@@ -33,6 +33,13 @@ type Hook struct {
 	ScenarioId int    `json:"scenarioId"`
 	Url        string `json:"url"`
 }
+
+type HookType string
+
+const (
+	HookTypeWeb  HookType = "web"
+	HookTypeMail HookType = "mail"
+)
 
 type HookResponse struct {
 	Hook Hook `json:"hook"`

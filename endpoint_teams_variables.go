@@ -5,12 +5,21 @@ import (
 )
 
 type TeamVariable struct {
-	Name     string `json:"name"`
-	TypeId   int    `json:"typeId"`
-	Value    any    `json:"value"`
-	IsSystem bool   `json:"isSystem"`
+	Name     string       `json:"name"`
+	TypeId   VariableType `json:"typeId"`
+	Value    any          `json:"value"`
+	IsSystem bool         `json:"isSystem"`
 	TeamId   int
 }
+
+type VariableType int
+
+const (
+	VariableTypeInt    VariableType = 1
+	VariableTypeString VariableType = 2
+	VariableTypeBool   VariableType = 3
+	VariableTypeDate   VariableType = 4
+)
 
 type TeamVariableListResponse struct {
 	TeamVariables []TeamVariable `json:"teamVariables"`

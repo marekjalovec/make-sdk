@@ -5,10 +5,10 @@ import (
 )
 
 type OrganizationVariable struct {
-	Name           string `json:"name"`
-	TypeId         int    `json:"typeId"`
-	Value          any    `json:"value"`
-	IsSystem       bool   `json:"isSystem"`
+	Name           string       `json:"name"`
+	TypeId         VariableType `json:"typeId"`
+	Value          any          `json:"value"`
+	IsSystem       bool         `json:"isSystem"`
 	OrganizationId int
 }
 
