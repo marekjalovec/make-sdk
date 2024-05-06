@@ -25,7 +25,7 @@ type Client struct {
 	rateLimiter <-chan time.Time
 	baseUrl     string
 	apiToken    string
-	scopes      *[]string
+	scopes      *[]TokenScope
 }
 
 func GetClient(config *Config) *Client {
@@ -195,7 +195,7 @@ func (at *Client) scopesLoaded() bool {
 	return at.scopes != nil
 }
 
-func (at *Client) hasScope(scope string) bool {
+func (at *Client) hasScope(scope TokenScope) bool {
 	if at.scopes == nil {
 		return false
 	}
@@ -209,7 +209,7 @@ func (at *Client) hasScope(scope string) bool {
 	return false
 }
 
-func (at *Client) handleKnownErrors(err error, scope string) error {
+func (at *Client) handleKnownErrors(err error, scope TokenScope) error {
 	var httpErr = getHttpError(err)
 	if httpErr == nil {
 		return err

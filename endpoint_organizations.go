@@ -74,7 +74,7 @@ func (lp *OrganizationListPaginator) NextPage() ([]Organization, error) {
 	var r = &OrganizationListResponse{}
 	var _, err = lp.client.Get(lp.config, r)
 	if err != nil {
-		return nil, lp.client.handleKnownErrors(err, "organizations:read")
+		return nil, lp.client.handleKnownErrors(err, TokenScopeOrganizationsRead)
 	}
 
 	lp.firstPage = false
@@ -115,7 +115,7 @@ func (at *Client) GetOrganization(organizationId int) (*Organization, error) {
 	var result = &OrganizationResponse{}
 	var _, err = at.Get(config, &result)
 	if err != nil {
-		return nil, at.handleKnownErrors(err, "organizations:read")
+		return nil, at.handleKnownErrors(err, TokenScopeOrganizationsRead)
 	}
 
 	return &result.Organization, nil

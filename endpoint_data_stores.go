@@ -48,7 +48,7 @@ func (lp *DataStoreListPaginator) NextPage() ([]DataStore, error) {
 	var r = &DataStoreListResponse{}
 	var _, err = lp.client.Get(lp.config, r)
 	if err != nil {
-		return nil, lp.client.handleKnownErrors(err, "datastores:read")
+		return nil, lp.client.handleKnownErrors(err, TokenScopeDataStoresRead)
 	}
 
 	lp.firstPage = false
@@ -89,7 +89,7 @@ func (at *Client) GetDataStore(dataStoreId int) (*DataStore, error) {
 	var result = &DataStoreResponse{}
 	var _, err = at.Get(config, &result)
 	if err != nil {
-		return nil, at.handleKnownErrors(err, "datastores:read")
+		return nil, at.handleKnownErrors(err, TokenScopeDataStoresRead)
 	}
 
 	return &result.DataStore, nil

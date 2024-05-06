@@ -67,7 +67,7 @@ func (lp *ConnectionListPaginator) NextPage() ([]Connection, error) {
 	var r = &ConnectionListResponse{}
 	var _, err = lp.client.Get(lp.config, r)
 	if err != nil {
-		return nil, lp.client.handleKnownErrors(err, "connections:read")
+		return nil, lp.client.handleKnownErrors(err, TokenScopeConnectionsRead)
 	}
 
 	lp.firstPage = false
@@ -108,7 +108,7 @@ func (at *Client) GetConnection(connectionId int) (*Connection, error) {
 	var result = &ConnectionResponse{}
 	var _, err = at.Get(config, &result)
 	if err != nil {
-		return nil, at.handleKnownErrors(err, "connections:read")
+		return nil, at.handleKnownErrors(err, TokenScopeConnectionsRead)
 	}
 
 	return &result.Connection, nil

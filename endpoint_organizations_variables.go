@@ -40,7 +40,7 @@ func (lp *OrganizationVariableListPaginator) NextPage() ([]OrganizationVariable,
 	var r = &OrganizationVariableListResponse{}
 	var _, err = lp.client.Get(lp.config, r)
 	if err != nil {
-		return nil, lp.client.handleKnownErrors(err, "organization-variables:read")
+		return nil, lp.client.handleKnownErrors(err, TokenScopeOrganizationVariablesRead)
 	}
 
 	lp.firstPage = false

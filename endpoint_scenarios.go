@@ -77,7 +77,7 @@ func (lp *ScenarioListPaginator) NextPage() ([]Scenario, error) {
 	var r = &ScenarioListResponse{}
 	var _, err = lp.client.Get(lp.config, r)
 	if err != nil {
-		return nil, lp.client.handleKnownErrors(err, "scenarios:read")
+		return nil, lp.client.handleKnownErrors(err, TokenScopeScenariosRead)
 	}
 
 	lp.firstPage = false
@@ -123,7 +123,7 @@ func (at *Client) GetScenario(scenarioId int) (*Scenario, error) {
 	var result = &ScenarioResponse{}
 	var _, err = at.Get(config, &result)
 	if err != nil {
-		return nil, at.handleKnownErrors(err, "scenarios:read")
+		return nil, at.handleKnownErrors(err, TokenScopeScenariosRead)
 	}
 
 	return &result.Scenario, nil

@@ -20,17 +20,17 @@ go get github.com/marekjalovec/make-sdk
 
 ```go
 // load a specific resource
-client.GetConnection(id)
+var c = client.GetConnection(id)
 
 // or iterate through a list
-var up = client.NewConnectionListPaginator(-1, teamId)
-for up.HasMorePages() {
-    connections, err := up.NextPage()
+var clp = client.NewConnectionListPaginator(-1, teamId)
+for clp.HasMorePages() {
+    connections, err := clp.NextPage()
     if err != nil {
         return nil, err
     }
 
-    for _, i := range dataStores {
+    for _, i := range connections {
         log.Println(i)
     }
 }

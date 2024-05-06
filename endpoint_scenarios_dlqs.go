@@ -56,7 +56,7 @@ func (lp *ScenarioDlqListPaginator) NextPage() ([]ScenarioDlq, error) {
 	var r = &ScenarioDlqListResponse{}
 	var _, err = lp.client.Get(lp.config, r)
 	if err != nil {
-		return nil, lp.client.handleKnownErrors(err, "scenarios:read")
+		return nil, lp.client.handleKnownErrors(err, TokenScopeDlqsRead)
 	}
 
 	lp.firstPage = false
@@ -96,7 +96,7 @@ func (at *Client) GetScenarioDlq(dlqId string) (*ScenarioDlq, error) {
 	var result = &ScenarioDlqResponse{}
 	var _, err = at.Get(config, &result)
 	if err != nil {
-		return nil, at.handleKnownErrors(err, "scenarios:read")
+		return nil, at.handleKnownErrors(err, TokenScopeDlqsRead)
 	}
 
 	return &result.ScenarioDlq, nil

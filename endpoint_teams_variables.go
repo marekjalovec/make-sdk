@@ -40,7 +40,7 @@ func (lp *TeamVariableListPaginator) NextPage() ([]TeamVariable, error) {
 	var r = &TeamVariableListResponse{}
 	var _, err = lp.client.Get(lp.config, r)
 	if err != nil {
-		return nil, lp.client.handleKnownErrors(err, "team-variables:read")
+		return nil, lp.client.handleKnownErrors(err, TokenScopeTeamVariablesRead)
 	}
 
 	lp.firstPage = false

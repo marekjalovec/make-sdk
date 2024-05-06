@@ -56,7 +56,7 @@ func (lp *FunctionListPaginator) NextPage() ([]Function, error) {
 	var r = &FunctionListResponse{}
 	var _, err = lp.client.Get(lp.config, r)
 	if err != nil {
-		return nil, lp.client.handleKnownErrors(err, "function:read")
+		return nil, lp.client.handleKnownErrors(err, TokenScopeFunctionsRead)
 	}
 
 	lp.firstPage = false
@@ -89,7 +89,7 @@ func (at *Client) GetFunction(functionId int) (*Function, error) {
 	var result = &FunctionResponse{}
 	var _, err = at.Get(config, &result)
 	if err != nil {
-		return nil, at.handleKnownErrors(err, "function:read")
+		return nil, at.handleKnownErrors(err, TokenScopeFunctionsRead)
 	}
 
 	return &result.Function, nil

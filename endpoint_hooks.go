@@ -67,7 +67,7 @@ func (lp *HookListPaginator) NextPage() ([]Hook, error) {
 	var r = &HookListResponse{}
 	var _, err = lp.client.Get(lp.config, r)
 	if err != nil {
-		return nil, lp.client.handleKnownErrors(err, "hooks:read")
+		return nil, lp.client.handleKnownErrors(err, TokenScopeHooksRead)
 	}
 
 	lp.firstPage = false
@@ -107,7 +107,7 @@ func (at *Client) GetHook(hookId int) (*Hook, error) {
 	var result = &HookResponse{}
 	var _, err = at.Get(config, &result)
 	if err != nil {
-		return nil, at.handleKnownErrors(err, "hooks:read")
+		return nil, at.handleKnownErrors(err, TokenScopeHooksRead)
 	}
 
 	return &result.Hook, nil

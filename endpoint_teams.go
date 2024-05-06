@@ -44,7 +44,7 @@ func (lp *TeamListPaginator) NextPage() ([]Team, error) {
 	var r = &TeamListResponse{}
 	var _, err = lp.client.Get(lp.config, r)
 	if err != nil {
-		return nil, lp.client.handleKnownErrors(err, "teams:read")
+		return nil, lp.client.handleKnownErrors(err, TokenScopeTeamsRead)
 	}
 
 	lp.firstPage = false
@@ -86,7 +86,7 @@ func (at *Client) GetTeam(teamId int) (*Team, error) {
 	var result = &TeamResponse{}
 	var _, err = at.Get(config, &result)
 	if err != nil {
-		return nil, at.handleKnownErrors(err, "teams:read")
+		return nil, at.handleKnownErrors(err, TokenScopeTeamsRead)
 	}
 
 	return &result.Team, nil

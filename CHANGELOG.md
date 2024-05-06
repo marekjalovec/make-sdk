@@ -1,3 +1,9 @@
+## v0.x.x [2024-TBD]
+
+_What's new?_
+
+- Token scope suggestions in case an API call fails moved to constants, and fixed where a wrong scope was suggested.
+
 ## v0.5.1 [2023-08-25]
 
 _What's new?_

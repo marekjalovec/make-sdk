@@ -54,7 +54,7 @@ func (lp *ScenarioLogListPaginator) NextPage() ([]ScenarioLog, error) {
 	var r = &ScenarioLogListResponse{}
 	var _, err = lp.client.Get(lp.config, r)
 	if err != nil {
-		return nil, lp.client.handleKnownErrors(err, "scenarios:read")
+		return nil, lp.client.handleKnownErrors(err, TokenScopeScenariosRead)
 	}
 
 	lp.firstPage = false
@@ -93,7 +93,7 @@ func (at *Client) GetScenarioLog(scenarioId int, executionId string) (*ScenarioL
 	var result = &ScenarioLogResponse{}
 	var _, err = at.Get(config, &result)
 	if err != nil {
-		return nil, at.handleKnownErrors(err, "scenarios:read")
+		return nil, at.handleKnownErrors(err, TokenScopeScenariosRead)
 	}
 
 	return &result.ScenarioLog, nil

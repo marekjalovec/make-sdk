@@ -40,7 +40,7 @@ func (lp *UserTeamRoleListPaginator) NextPage() ([]UserTeamRole, error) {
 	var r = &UserTeamRoleListResponse{}
 	var _, err = lp.client.Get(lp.config, r)
 	if err != nil {
-		return nil, lp.client.handleKnownErrors(err, "user:read")
+		return nil, lp.client.handleKnownErrors(err, TokenScopeUserRead)
 	}
 
 	lp.firstPage = false
